@@ -75,7 +75,6 @@ async def process_webhook_event(
         return {"status": "ok", "unhandled_event_type": True}
 
     # Route to handler
-    event_data = payload.data
-    await handler(event_data)
+    await handler(payload)
 
     return {"status": "ok"}

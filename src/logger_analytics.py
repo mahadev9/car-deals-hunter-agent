@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional
 
 from database.core import get_session
 from database.models.webhook_event_analytics import WebhookEventAnalytics
+from models.event_status import EventStatus
 
 
 class DatabaseLoggingHandler(logging.Handler):
@@ -30,9 +31,11 @@ class DatabaseLoggingHandler(logging.Handler):
                 event = WebhookEventAnalytics(
                     event_id=analytics_data.get("event_id"),
                     event_type=analytics_data.get("event_type"),
-                    status=analytics_data.get("status", "processed"),
+                    status=analytics_data.get("status", EventStatus.PROCESSED.value),
                     sender_handle=metadata.get("sender"),
+                    recipient_handle=metadata.get("recipient"),
                     chat_id=metadata.get("chat_id"),
+                    is_group_chat=metadata.get("is_group_chat", False),
                     message_id=metadata.get("message_id"),
                     error_message=analytics_data.get("error"),
                     metadata_json=metadata_json,
@@ -74,7 +77,7 @@ def log_event_analytics(
     event_type: str,
     event_id: str,
     metadata: Dict[str, Any],
-    status: str = "processed",
+    status: str = EventStatus.PROCESSED.value,
     error: Optional[str] = None,
 ) -> None:
     """

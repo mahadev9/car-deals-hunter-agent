@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import JSON, Column, DateTime, Index, Integer, String, Text
+from sqlalchemy import JSON, Column, DateTime, Index, Integer, String, Text, Boolean
 
 from database.core import Base
 
@@ -31,16 +31,10 @@ class WebhookEventAnalytics(Base):
     sender_handle = Column(String, nullable=True, index=True)
     recipient_handle = Column(String, nullable=True)
     chat_id = Column(String, nullable=True, index=True)
-    is_group_chat = Column(Integer, default=0, nullable=False)
+    is_group_chat = Column(Boolean, default=False, nullable=False)
 
     # Message/Content data
     message_id = Column(String, nullable=True)
-    message_content_length = Column(Integer, nullable=True)
-    service_type = Column(String, nullable=True)  # iMessage, SMS, RCS
-
-    # Reaction/Interaction data
-    reaction_type = Column(String, nullable=True)
-    participant_handle = Column(String, nullable=True)
 
     # Error handling
     error_code = Column(String, nullable=True)

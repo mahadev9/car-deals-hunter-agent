@@ -219,6 +219,8 @@ __marimo__/
 
 # misc
 data/
+db/
+logs/
 
 # vscode settings
 .vscode/

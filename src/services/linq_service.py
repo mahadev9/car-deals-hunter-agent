@@ -4,9 +4,9 @@ import logging
 from typing import Any, Dict
 
 from config import settings
-from database.events import is_duplicate_event
 from models.webhook_event_model import WebhookEvent, WebhookEventHeaders
 from services.linq_event_handlers import EVENT_HANDLERS
+from services.webhook_events import is_duplicate_event
 
 logger = logging.getLogger(__name__)
 

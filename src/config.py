@@ -146,7 +146,8 @@ class Settings(BaseSettings):
 
     @property
     def APP_DATABASE_PATH(self) -> str:
-        return os.path.join(self.APP_PATH, "car-deals.db")
+        os.makedirs(os.path.join(self.APP_PATH, "data"), exist_ok=True)
+        return os.path.join(self.APP_PATH, "data", "car-deals.db")
 
 
 settings = Settings()

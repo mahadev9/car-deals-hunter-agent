@@ -1,33 +1,30 @@
 import logging
-import os
-import sys
 from uuid import uuid4
 
 from langchain.agents import create_agent
-from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain.messages import HumanMessage
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.types import Checkpointer
 
 from config import settings
+from services.linq_tools import (
+    add_or_remove_a_reaction_to_a_message,
+    get_messages_from_a_chat,
+    mark_chat_as_read,
+    send_a_message,
+)
 from services.prompt_config import SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 
 
 async def create_llm_agent(checkpointer: Checkpointer):
-    client = MultiServerMCPClient(
-        {
-            "linq": {
-                "transport": "stdio",
-                "command": sys.executable,
-                # Run as a module so package imports resolve correctly
-                "args": ["-m", "src.services.linq_service"],
-                "env": {"PYTHONPATH": os.path.join(settings.APP_PATH, "src")},
-            },
-        }
-    )
-
-    tools = await client.get_tools()
+    tools = [
+        mark_chat_as_read,
+        send_a_message,
+        get_messages_from_a_chat,
+        add_or_remove_a_reaction_to_a_message,
+    ]
 
     if settings.llm_provider == "lmstudio":
         tools.append({"type": "mcp", "server_label": "playwright"})
@@ -51,6 +48,8 @@ async def invoke_agent(query: str):
     ) as checkpointer:
         agent = await create_llm_agent(checkpointer)
 
-        response = await agent.ainvoke(
-            query, config={"configurable": {"thread_id": str(uuid4())}}
+        await agent.ainvoke(
+            {"messages": [HumanMessage(content=query)]},
+            config={"configurable": {"thread_id": str(uuid4())}},
         )
+        logger.info("agent responding")

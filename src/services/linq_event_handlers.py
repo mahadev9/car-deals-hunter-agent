@@ -4,6 +4,7 @@ import time
 from logger_analytics import log_event_analytics
 from models.event_status import EventStatus
 from models.webhook_event_model import WebhookEvent
+from services.llm_agent import invoke_agent
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +39,24 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
         },
     )
 
-    # TODO: Process message with LLM agent
-    # For now, just log it
+    start_time = time.time()
+
+    user_message = "\n".join([part["value"] for part in event_data.get("parts", [])])
+    await invoke_agent(
+        f"New message received in chat '{chat_id}' from {sender}: {user_message}"
+    )
+
+    duration_ms = int((time.time() - start_time) * 1000)
+    log_event_analytics(
+        event_type="agent.invocation",
+        event_id=event_payload.event_id,
+        metadata={
+            "chat_id": chat_id,
+            "sender": sender,
+            "message_id": message_id,
+            "duration_ms": duration_ms,
+        },
+    )
 
 
 async def handle_message_sent(event_payload: WebhookEvent) -> None:

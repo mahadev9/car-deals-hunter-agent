@@ -42,6 +42,11 @@ class Settings(BaseSettings):
         description="The default temperature for language model responses. Higher values (e.g., 0.9) make output more random, while lower values (e.g., 0.2) make it more focused and deterministic.",
     )
 
+    LINQ_API_KEY: SecretStr = Field(
+        ...,
+        description="API key for LINQ when using LINQ for data retrieval.",
+    )
+
     @model_validator(mode="after")
     def validate_llm_model(self) -> "Settings":
         provider, model = self.LLM_MODEL.split(":", 1)

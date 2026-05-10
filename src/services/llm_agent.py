@@ -29,6 +29,12 @@ async def create_llm_agent(checkpointer: Checkpointer):
     if settings.llm_provider == "lmstudio":
         tools.append({"type": "mcp", "server_label": "playwright"})
 
+    if settings.llm_provider == "anthropic":
+        tools.append({"type": "web_search_20260209", "name": "web_search"})
+
+    if settings.llm_provider == "openai":
+        tools.append({"type": "web_search"})
+
     logger.info("Initializing LLM agent")
 
     return create_agent(

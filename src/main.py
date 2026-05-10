@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 import logging
 
 import uvicorn
@@ -9,16 +10,23 @@ from logger import LOGGING_CONFIG, bootstrap_logging
 from logger_analytics import configure_analytics_logging
 from routes.health import router as health_router
 from routes.linq_webhook import router as linq_webhook_router
+from services.message_processing_worker import (
+    start_message_processing_worker,
+    stop_message_processing_worker,
+)
 
 bootstrap_logging()
 configure_analytics_logging()
 logger = logging.getLogger(__name__)
 
 
-def lifespan(app: FastAPI):
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     logger.info("Starting up the Car Deals Hunter Agent...")
     init_database()
+    worker_task, stop_event = await start_message_processing_worker()
     yield
+    await stop_message_processing_worker(worker_task, stop_event)
     logger.info("Shutting down the Car Deals Hunter Agent...")
 
 

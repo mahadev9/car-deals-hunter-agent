@@ -77,6 +77,17 @@ class Settings(BaseSettings):
         description="The external folder path to be mounted for logs and database.",
     )
 
+    MESSAGE_PROCESSING_DELAY_SECONDS: int = Field(
+        default=120,
+        description="Delay in seconds to wait before processing a new message from the same user. This helps prevent spamming and allows time for users to provide additional context if needed.",
+        ge=60,
+    )
+    POLL_INTERVAL_SECONDS: int = Field(
+        default=15,
+        description="Interval in seconds at which the message processing worker checks for pending jobs that are due for processing.",
+        ge=5,
+    )
+
     @model_validator(mode="after")
     def validate_llm_model(self) -> "Settings":
         if self.llm_provider not in ["lmstudio", "openai", "anthropic", "google_genai"]:

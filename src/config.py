@@ -1,3 +1,5 @@
+import os
+
 from langchain.chat_models import BaseChatModel
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -11,6 +13,11 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
+
+    APP_PATH: str = Field(
+        default=os.getcwd(),
+        description="The base path of the application.",
     )
 
     LLM_MODEL: str = Field(

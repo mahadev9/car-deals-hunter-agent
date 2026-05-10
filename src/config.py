@@ -56,13 +56,12 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_llm_model(self) -> "Settings":
-        provider, model = self.LLM_MODEL.split(":", 1)
-        if provider not in ["lmstudio", "openai", "anthropic", "google_genai"]:
+        if self.llm_provider not in ["lmstudio", "openai", "anthropic", "google_genai"]:
             raise ValueError(
-                f"Unsupported provider '{provider}'. Supported providers are: lmstudio, openai, anthropic, google_genai."
+                f"Unsupported provider '{self.llm_provider}'. Supported providers are: lmstudio, openai, anthropic, google_genai."
             )
 
-        if provider == "lmstudio":
+        if self.llm_provider == "lmstudio":
             if self.LM_STUDIO_API_KEY is None:
                 raise ValueError(
                     "LM_STUDIO_API_KEY environment variable is required for lmstudio provider."
@@ -71,17 +70,17 @@ class Settings(BaseSettings):
                 raise ValueError(
                     "LM_STUDIO_BASE_URL environment variable is required for lmstudio provider."
                 )
-        elif provider == "openai":
+        elif self.llm_provider == "openai":
             if self.OPENAI_API_KEY is None:
                 raise ValueError(
                     "OPENAI_API_KEY environment variable is required for openai provider."
                 )
-        elif provider == "anthropic":
+        elif self.llm_provider == "anthropic":
             if self.ANTHROPIC_API_KEY is None:
                 raise ValueError(
                     "ANTHROPIC_API_KEY environment variable is required for anthropic provider."
                 )
-        elif provider == "google_genai":
+        elif self.llm_provider == "google_genai":
             if self.GEMINI_API_KEY is None:
                 raise ValueError(
                     "GEMINI_API_KEY environment variable is required for google_genai provider."

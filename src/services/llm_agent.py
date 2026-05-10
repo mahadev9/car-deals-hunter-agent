@@ -1,8 +1,11 @@
-from langchain.agents import create_agent
-from langchain_mcp_adapters.client import MultiServerMCPClient
 import os
 import sys
+
+from langchain.agents import create_agent
+from langchain_mcp_adapters.client import MultiServerMCPClient
+
 from config import settings
+from services.prompt_config import SYSTEM_PROMPT
 
 
 async def create_llm_agent():
@@ -27,4 +30,5 @@ async def create_llm_agent():
         model=settings.llm_client,
         tools=tools,
         name="Car Deals Hunter Agent",
+        system_prompt=SYSTEM_PROMPT,
     )

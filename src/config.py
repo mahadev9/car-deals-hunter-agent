@@ -140,5 +140,9 @@ class Settings(BaseSettings):
                 api_key=self.GEMINI_API_KEY.get_secret_value(),
             )
 
+    @property
+    def APP_DATABASE_PATH(self) -> str:
+        return os.path.join(self.APP_PATH, "car-deals.db")
+
 
 settings = Settings()

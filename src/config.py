@@ -166,7 +166,7 @@ class Settings(BaseSettings):
 
     @property
     def APP_DATABASE_PATH(self) -> str:
-        return os.path.join(self.MOUNT_FOLDER, "data", "car-deals.db")
+        return os.path.join(self.MOUNT_FOLDER, "db", "car-deals.db")
 
 
 settings = Settings()

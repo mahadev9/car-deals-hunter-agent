@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  car-deals-hunter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: car-deals-hunter-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=prod
+      - APP_PORT=8000
+      - MOUNT_FOLDER=/mnt
+    volumes:
+      - ./data:/mnt
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s

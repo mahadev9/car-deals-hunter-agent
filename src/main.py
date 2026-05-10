@@ -7,6 +7,7 @@ from config import settings
 from database.core import init_database
 from logger import LOGGING_CONFIG, bootstrap_logging
 from logger_analytics import configure_analytics_logging
+from routes.health import router as health_router
 from routes.linq_webhook import router as linq_webhook_router
 
 bootstrap_logging()
@@ -29,6 +30,7 @@ app = FastAPI(
 )
 
 app.include_router(router=linq_webhook_router, prefix="/api")
+app.include_router(router=health_router)
 
 
 if __name__ == "__main__":

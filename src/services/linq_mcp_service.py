@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Literal, Optional
@@ -7,6 +8,8 @@ from linq import AsyncLinqAPIV3
 from linq.types import MessageContentParam, ReactionType
 
 from config import settings
+
+logger = logging.getLogger(__name__)
 
 mcp = FastMCP(
     name="Linq Messaging Service",

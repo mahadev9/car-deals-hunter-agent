@@ -1,4 +1,5 @@
 import os
+from typing import Literal
 
 from langchain.chat_models import BaseChatModel
 from langchain_anthropic import ChatAnthropic
@@ -18,6 +19,15 @@ class Settings(BaseSettings):
     APP_PATH: str = Field(
         default=os.getcwd(),
         description="The base path of the application.",
+    )
+
+    ENV: Literal["dev", "staging", "prod"] = Field(
+        default="dev",
+        description="The application environment (e.g., 'dev', 'staging', 'prod').",
+    )
+    APP_PORT: int = Field(
+        default=8000,
+        description="The port on which the FastAPI application will run.",
     )
 
     LLM_MODEL: str = Field(
@@ -52,6 +62,10 @@ class Settings(BaseSettings):
     LINQ_API_KEY: SecretStr = Field(
         ...,
         description="API key for LINQ when using LINQ for data retrieval.",
+    )
+    LINQ_SIGNING_SECRET: SecretStr = Field(
+        ...,
+        description="Signing secret for LINQ when using LINQ for data retrieval.",
     )
 
     @model_validator(mode="after")

@@ -28,7 +28,7 @@ class Base(DeclarativeBase):
 def init_database() -> None:
     """Initialize database schema."""
 
-    os.makedirs(os.path.join(settings.MOUNT_FOLDER, "data"), exist_ok=True)
+    os.makedirs(os.path.join(settings.MOUNT_FOLDER, "db"), exist_ok=True)
 
     Base.metadata.create_all(bind=engine)
     logger.info(f"Database initialized at {settings.APP_DATABASE_PATH}")

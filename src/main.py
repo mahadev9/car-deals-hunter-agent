@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from config import settings
+from database.core import init_database
 from logger import LOGGING_CONFIG, bootstrap_logging
 from routes.linq_webhook import router as linq_webhook_router
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 def lifespan(app: FastAPI):
     logger.info("Starting up the Car Deals Hunter Agent...")
+    init_database()
     yield
     logger.info("Shutting down the Car Deals Hunter Agent...")
 

@@ -67,6 +67,10 @@ class Settings(BaseSettings):
         ...,
         description="Signing secret for LINQ when using LINQ for data retrieval.",
     )
+    EVENT_EXPIRATION_HOURS: int = Field(
+        default=12,
+        description="Number of hours after which processed events are considered expired and can be cleaned up from the database.",
+    )
 
     @model_validator(mode="after")
     def validate_llm_model(self) -> "Settings":

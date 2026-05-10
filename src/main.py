@@ -6,9 +6,11 @@ from fastapi import FastAPI
 from config import settings
 from database.core import init_database
 from logger import LOGGING_CONFIG, bootstrap_logging
+from logger_analytics import configure_analytics_logging
 from routes.linq_webhook import router as linq_webhook_router
 
 bootstrap_logging()
+configure_analytics_logging()
 logger = logging.getLogger(__name__)
 
 

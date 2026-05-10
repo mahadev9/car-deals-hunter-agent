@@ -72,6 +72,11 @@ class Settings(BaseSettings):
         description="Number of hours after which processed events are considered expired and can be cleaned up from the database.",
     )
 
+    MOUNT_FOLDER: str = Field(
+        ...,
+        description="The external folder path to be mounted for logs and database.",
+    )
+
     @model_validator(mode="after")
     def validate_llm_model(self) -> "Settings":
         if self.llm_provider not in ["lmstudio", "openai", "anthropic", "google_genai"]:
@@ -145,9 +150,12 @@ class Settings(BaseSettings):
             )
 
     @property
+    def LOGS_FOLDER_PATH(self) -> str:
+        return os.path.join(self.MOUNT_FOLDER, "logs")
+
+    @property
     def APP_DATABASE_PATH(self) -> str:
-        os.makedirs(os.path.join(self.APP_PATH, "data"), exist_ok=True)
-        return os.path.join(self.APP_PATH, "data", "car-deals.db")
+        return os.path.join(self.MOUNT_FOLDER, "data", "car-deals.db")
 
 
 settings = Settings()

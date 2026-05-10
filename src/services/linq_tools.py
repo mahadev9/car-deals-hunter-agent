@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -39,6 +40,7 @@ async def mark_chat_as_read(chat_id: str):
     Args:
         chat_id (str): The ID of the chat to mark as read.
     """
+    logger.info(f"Marking chat {chat_id} as read using tool")
     async with linq_client() as client:
         await client.chats.mark_as_read(chat_id)
 
@@ -51,13 +53,16 @@ async def send_a_message(chat_id: str, message: str):
         chat_id (str): The ID of the chat to send the message to.
         message (str): The message to send.
     """
+    logger.info(f"Sending message to chat {chat_id} using tool")
     async with linq_client() as client:
         await start_typing_indicator(client, chat_id)
+        await asyncio.sleep(1)
         try:
             await client.chats.messages.send(
                 chat_id, message=build_text_message(message)
             )
         finally:
+            await asyncio.sleep(1)
             await stop_typing_indicator(client, chat_id)
 
 
@@ -72,6 +77,7 @@ async def get_messages_from_a_chat(chat_id: str, limit: int = 20):
     Returns:
         List[Dict]: A list of message dictionaries.
     """
+    logger.info(f"Getting messages from chat {chat_id} using tool")
     async with linq_client() as client:
         return [
             chat_message.model_dump()
@@ -94,6 +100,9 @@ async def add_or_remove_a_reaction_to_a_message(
         reaction_type (ReactionType): The type of reaction to add or remove.
         custom_emoji (Optional[str]): The custom emoji for the reaction, if applicable.
     """
+    logger.info(
+        f"{'Adding' if operation == 'add' else 'Removing'} reaction to message {message_id} using tool: type={reaction_type}, custom_emoji={custom_emoji}"
+    )
     async with linq_client() as client:
         reaction_kwargs = {"operation": operation, "type": reaction_type}
         if custom_emoji is not None:

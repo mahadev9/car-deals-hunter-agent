@@ -1,5 +1,6 @@
-from contextlib import asynccontextmanager
 import logging
+import os
+from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
@@ -23,6 +24,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting up the Car Deals Hunter Agent...")
+    os.makedirs(settings.DOCUMENTS_FOLDER_PATH, exist_ok=True)
     init_database()
     worker_task, stop_event = await start_message_processing_worker()
     yield

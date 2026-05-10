@@ -7,6 +7,8 @@ from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.types import Checkpointer
 
 from config import settings
+from services.chat_summary_tools import get_summary_for_chat, upsert_summary_for_chat
+from services.image_tool import read_image_as_text
 from services.linq_tools import (
     add_or_remove_a_reaction_to_a_message,
     get_messages_from_a_chat,
@@ -24,6 +26,9 @@ async def create_llm_agent(checkpointer: Checkpointer):
         send_a_message,
         get_messages_from_a_chat,
         add_or_remove_a_reaction_to_a_message,
+        read_image_as_text,
+        get_summary_for_chat,
+        upsert_summary_for_chat,
     ]
 
     if settings.llm_provider == "lmstudio":

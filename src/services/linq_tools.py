@@ -78,11 +78,11 @@ async def get_messages_from_a_chat(chat_id: str, limit: int = 20):
         List[Dict]: A list of message dictionaries.
     """
     logger.info(f"Getting messages from chat {chat_id} using tool")
+    messages = []
     async with linq_client() as client:
-        return [
-            chat_message.model_dump()
-            async for chat_message in client.chats.messages.list(chat_id, limit=limit)
-        ]
+        async for chat_message in client.chats.messages.list(chat_id, limit=limit):
+            messages.append(chat_message.model_dump())
+    return messages
 
 
 async def add_or_remove_a_reaction_to_a_message(

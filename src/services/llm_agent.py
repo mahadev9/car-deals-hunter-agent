@@ -35,7 +35,13 @@ async def create_llm_agent(checkpointer: Checkpointer):
         tools.append({"type": "mcp", "server_label": "playwright"})
 
     if settings.llm_provider == "anthropic":
-        tools.append({"type": "web_search_20260209", "name": "web_search"})
+        tools.append(
+            {
+                "type": "web_search_20260209",
+                "name": "web_search",
+                "allowed_callers": ["direct"],
+            }
+        )
 
     if settings.llm_provider == "openai":
         tools.append({"type": "web_search"})

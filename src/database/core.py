@@ -6,7 +6,7 @@ from sqlalchemy.orm import DeclarativeBase, Session
 
 from config import settings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 # Database URL for SQLite
 DATABASE_URL = f"sqlite:///{settings.APP_DATABASE_PATH}"

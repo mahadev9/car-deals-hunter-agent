@@ -8,7 +8,7 @@ from models.webhook_event_model import WebhookEvent
 from services.llm_agent import invoke_agent
 from services.message_processing_queue import schedule_message_processing
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 async def handle_message_received(event_payload: WebhookEvent) -> None:

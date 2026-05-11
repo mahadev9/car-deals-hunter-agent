@@ -7,7 +7,7 @@ from config import settings
 
 LOGGING_CONFIG = {
     "version": 1,
-    "disable_existing_loggers": False,
+    # "disable_existing_loggers": False,
     "formatters": {
         "standard": {
             "format": "%(asctime)s | %(name)s | %(module)s | %(funcName)s | %(levelname)s | %(message)s"
@@ -30,9 +30,11 @@ LOGGING_CONFIG = {
             "encoding": "utf8",
         },
     },
-    "root": {
-        "handlers": ["console", "file"],
-        "level": logging.INFO,
+    "loggers": {
+        "car-deals-hunter": {
+            "handlers": ["console", "file"],
+            "level": logging.INFO,
+        },
     },
 }
 

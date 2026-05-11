@@ -18,7 +18,7 @@ from services.message_processing_worker import (
 
 bootstrap_logging()
 configure_analytics_logging()
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 @asynccontextmanager

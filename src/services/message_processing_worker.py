@@ -13,7 +13,7 @@ from services.message_processing_queue import (
     list_due_pending_jobs,
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 async def _process_pending_job(chat_id: str, generation: int) -> None:

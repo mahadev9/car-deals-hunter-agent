@@ -6,7 +6,7 @@ from sqlalchemy import and_, update
 from database.core import get_session
 from database.models.pending_message_processing import PendingMessageProcessing
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 def schedule_message_processing(

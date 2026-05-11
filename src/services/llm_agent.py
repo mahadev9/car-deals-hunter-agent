@@ -10,7 +10,7 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from config import settings
 from services.prompt_config import SYSTEM_PROMPT
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 async def create_llm_agent(checkpointer: Checkpointer):

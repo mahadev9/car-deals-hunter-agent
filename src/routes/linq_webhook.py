@@ -11,7 +11,7 @@ from services.linq_service import (
     verify_signature,
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 router = APIRouter(prefix="/linq", tags=["linq"])
 

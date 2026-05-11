@@ -7,7 +7,7 @@ from config import settings
 from database.core import get_session
 from database.models.webhook_event import WebhookEvent
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 def is_duplicate_event(event_id: str, event_type: str) -> bool:

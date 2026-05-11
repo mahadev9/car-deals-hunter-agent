@@ -8,7 +8,7 @@ from models.webhook_event_model import WebhookEvent, WebhookEventHeaders
 from services.linq_event_handlers import EVENT_HANDLERS
 from services.webhook_events import is_duplicate_event
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("car-deals-hunter")
 
 
 class WebhookSignatureError(Exception):

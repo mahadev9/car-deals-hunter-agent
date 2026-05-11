@@ -5,6 +5,7 @@ from config import settings
 from logger_analytics import log_event_analytics
 from models.event_status import EventStatus
 from models.webhook_event_model import WebhookEvent
+from services.llm_agent import invoke_agent
 from services.message_processing_queue import schedule_message_processing
 
 logger = logging.getLogger(__name__)
@@ -43,13 +44,17 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
     start_time = time.time()
 
     user_message = "\n".join([part["value"] for part in event_data.get("parts", [])])
-    process_at, generation = schedule_message_processing(
-        chat_id=chat_id,
-        sender=sender,
-        message_id=message_id,
-        user_message=user_message,
-        event_id=event_payload.event_id,
-        delay_seconds=settings.MESSAGE_PROCESSING_DELAY_SECONDS,
+    # process_at, generation = schedule_message_processing(
+    #     chat_id=chat_id,
+    #     sender=sender,
+    #     message_id=message_id,
+    #     user_message=user_message,
+    #     event_id=event_payload.event_id,
+    #     delay_seconds=settings.MESSAGE_PROCESSING_DELAY_SECONDS,
+    # )
+
+    await invoke_agent(
+        f"New message received in chat '{chat_id}' from {sender}: {user_message}"
     )
 
     duration_ms = int((time.time() - start_time) * 1000)
@@ -61,8 +66,8 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
             "sender": sender,
             "message_id": message_id,
             "delay_seconds": settings.MESSAGE_PROCESSING_DELAY_SECONDS,
-            "process_at": process_at.isoformat(),
-            "generation": generation,
+            "process_at": "",
+            "generation": "",
             "duration_ms": duration_ms,
         },
     )

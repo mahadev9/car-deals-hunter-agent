@@ -81,7 +81,19 @@ async def get_messages_from_a_chat(chat_id: str, limit: int = 20):
     messages = []
     async with linq_client() as client:
         async for chat_message in client.chats.messages.list(chat_id, limit=limit):
-            messages.append(chat_message.model_dump())
+            role = "user"
+            if chat_message.is_from_me:
+                role = "assistant"
+
+            content = ""
+            for part in chat_message.parts:
+                if part.type == "text":
+                    content += f"{part.value}\n"
+                elif part.type == "media" and part.mime_type.startswith("image/"):
+                    content += f"image: {part.url}\n"
+                elif part.type == "link":
+                    content += f"link: {part.value}\n"
+            messages.append({"role": role, "content": content})
     return messages
 
 

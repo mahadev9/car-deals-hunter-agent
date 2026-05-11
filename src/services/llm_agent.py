@@ -55,7 +55,7 @@ async def invoke_agent(query: str):
     logger.info(f"Invoking agent with query: {query}")
 
     async with AsyncSqliteSaver.from_conn_string(
-        settings.APP_DATABASE_PATH
+        settings.CHECKPOINTER_DATABASE_PATH
     ) as checkpointer:
         agent = await create_llm_agent(checkpointer)
 
@@ -63,4 +63,4 @@ async def invoke_agent(query: str):
             {"messages": [HumanMessage(content=query)]},
             config={"configurable": {"thread_id": str(uuid4())}},
         )
-        logger.info("agent responding")
+        logger.info("agent responded")

@@ -80,10 +80,10 @@ class Settings(BaseSettings):
     MESSAGE_PROCESSING_DELAY_SECONDS: int = Field(
         default=120,
         description="Delay in seconds to wait before processing a new message from the same user. This helps prevent spamming and allows time for users to provide additional context if needed.",
-        ge=60,
+        ge=30,
     )
     POLL_INTERVAL_SECONDS: int = Field(
-        default=15,
+        default=10,
         description="Interval in seconds at which the message processing worker checks for pending jobs that are due for processing.",
         ge=5,
     )
@@ -167,6 +167,10 @@ class Settings(BaseSettings):
     @property
     def APP_DATABASE_PATH(self) -> str:
         return os.path.join(self.MOUNT_FOLDER, "db", "car-deals.db")
+
+    @property
+    def CHECKPOINTER_DATABASE_PATH(self) -> str:
+        return os.path.join(self.MOUNT_FOLDER, "db", "langgraph-checkpoints.db")
 
     @property
     def DOCUMENTS_FOLDER_PATH(self) -> str:

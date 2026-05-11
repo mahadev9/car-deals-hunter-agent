@@ -5,34 +5,30 @@ from langchain.agents import create_agent
 from langchain.messages import HumanMessage
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.types import Checkpointer
+from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from config import settings
-from services.chat_summary_tools import get_summary_for_chat, upsert_summary_for_chat
-from services.image_tool import read_image_as_text
-from services.linq_tools import (
-    add_or_remove_a_reaction_to_a_message,
-    get_messages_from_a_chat,
-    mark_chat_as_read,
-    send_a_message,
-)
 from services.prompt_config import SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 
 
 async def create_llm_agent(checkpointer: Checkpointer):
-    tools = [
-        mark_chat_as_read,
-        send_a_message,
-        get_messages_from_a_chat,
-        add_or_remove_a_reaction_to_a_message,
-        read_image_as_text,
-        get_summary_for_chat,
-        upsert_summary_for_chat,
-    ]
+    client = MultiServerMCPClient(
+        connections={
+            "car-deals-hunter": {
+                "transport": "streamable-http",
+                "url": "http://localhost:8010/mcp",
+            }
+        }
+    )
+    tools = await client.get_tools()
 
     if settings.llm_provider == "lmstudio":
-        tools.append({"type": "mcp", "server_label": "playwright"})
+        tools = [
+            {"type": "mcp", "server_label": "playwright"},
+            {"type": "mcp", "server_label": "car-deals-hunter"},
+        ]
 
     if settings.llm_provider == "anthropic":
         tools.append(

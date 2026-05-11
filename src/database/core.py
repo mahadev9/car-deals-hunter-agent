@@ -30,6 +30,16 @@ def init_database() -> None:
 
     os.makedirs(os.path.join(settings.MOUNT_FOLDER, "db"), exist_ok=True)
 
+    # Import model modules so their tables are registered on Base.metadata.
+    from database.models import chat_summary, pending_message_processing, webhook_event, webhook_event_analytics
+
+    _ = (
+        chat_summary,
+        pending_message_processing,
+        webhook_event,
+        webhook_event_analytics,
+    )
+
     Base.metadata.create_all(bind=engine)
     logger.info(f"Database initialized at {settings.APP_DATABASE_PATH}")
 

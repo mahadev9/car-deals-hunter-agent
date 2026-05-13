@@ -54,7 +54,7 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
     # )
 
     await invoke_agent(
-        f"New message received in chat '{chat_id}' from {sender}: {user_message}"
+        f"New message received in chat '{chat_id}' from {sender} (message {message_id}): {user_message}"
     )
 
     duration_ms = int((time.time() - start_time) * 1000)

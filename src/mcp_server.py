@@ -113,7 +113,7 @@ async def get_messages_from_a_chat(chat_id: str, limit: int = 20):
                     content += f"image: {part.url}\n"
                 elif part.type == "link":
                     content += f"link: {part.value}\n"
-            messages.append({"role": role, "content": content})
+            messages.append({"role": role, "content": content, "message_id": chat_message.id})
     return messages
 
 

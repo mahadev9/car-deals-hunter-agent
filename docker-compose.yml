@@ -1,5 +1,6 @@
 services:
   car-deals-hunter:
+    image: car-deals-hunter-agent:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,9 +31,7 @@ services:
       start_period: 5s
 
   car-deals-hunter-mcp:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: car-deals-hunter-agent:latest
     container_name: car-deals-hunter-agent-mcp
     command: ["python", "src/mcp_server.py"]
     ports:

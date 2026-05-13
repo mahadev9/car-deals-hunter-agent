@@ -20,6 +20,3 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 # Expose the API port (default FastAPI port)
 EXPOSE 8000
-
-# Run the application
-CMD ["python", "src/main.py"]

@@ -108,8 +108,16 @@ async def handle_linq_webhook(
         return JSONResponse(status_code=status.HTTP_200_OK, content=result)
 
     except Exception as e:
-        logger.error(f"Unexpected error handling webhook: {str(e)}", exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error",
+        logger.error(
+            f"Error handling webhook for event {payload.event_id}: {type(e).__name__}: {str(e)}",
+            exc_info=True,
+        )
+        # Return 200 OK even on error to avoid Linq retrying (errors are logged internally)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": "ok",
+                "note": "Event processed with errors - check logs",
+                "event_id": payload.event_id,
+            },
         )

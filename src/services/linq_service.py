@@ -74,7 +74,14 @@ async def process_webhook_event(
         logger.warning(f"No handler registered for event type: {headers.event_type}")
         return {"status": "ok", "unhandled_event_type": True}
 
-    # Route to handler
-    await handler(payload)
-
-    return {"status": "ok"}
+    # Route to handler with error handling
+    try:
+        await handler(payload)
+        return {"status": "ok"}
+    except Exception as e:
+        logger.error(
+            f"Error in event handler for {headers.event_type}: {type(e).__name__}: {str(e)}",
+            exc_info=True,
+        )
+        # Don't re-raise to prevent webhook failure - errors are logged
+        return {"status": "ok", "handler_error": str(e)}

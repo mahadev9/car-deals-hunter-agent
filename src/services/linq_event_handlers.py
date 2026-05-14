@@ -53,7 +53,7 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
     #     delay_seconds=settings.MESSAGE_PROCESSING_DELAY_SECONDS,
     # )
 
-    await invoke_agent(
+    success = await invoke_agent(
         f"New message received in chat '{chat_id}' from {sender} (message {message_id}): {user_message}"
     )
 
@@ -69,6 +69,7 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
             "process_at": "",
             "generation": "",
             "duration_ms": duration_ms,
+            "success": success,
         },
     )
 

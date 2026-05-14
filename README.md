@@ -74,9 +74,28 @@ The application uses an MCP (Model Context Protocol) server running on `http://l
 
 The MCP server must be running for agent tool invocations to work properly.
 
+## Error Handling
+
+The application includes comprehensive error handling for external API failures:
+
+- **Automatic Retries**: Failed LLM API calls are retried with exponential backoff (configurable, default 3 attempts)
+- **Timeouts**: Configurable timeouts prevent hanging requests (MCP: 10s, LLM: 300s)
+- **Graceful Degradation**: Errors are logged and processing continues; service remains available
+- **Smart Error Classification**: Retryable errors (5xx, timeouts) are retried; non-retryable (4xx, auth) fail immediately
+
+**Configuration** (in `.env`):
+```env
+MCP_SERVER_TIMEOUT=10              # seconds
+LLM_INVOCATION_TIMEOUT=300         # seconds (5 minutes)
+LLM_RETRY_MAX_ATTEMPTS=3           # total attempts
+LLM_RETRY_INITIAL_DELAY=2.0        # seconds
+LLM_RETRY_MAX_DELAY=10.0           # seconds
+```
+
 ## Notes
 
 - The background worker checks for due jobs every `POLL_INTERVAL_SECONDS` seconds.
 - New messages are held for `MESSAGE_PROCESSING_DELAY_SECONDS` before processing so follow-up messages can be batched into the same chat.
 - The agent uses LangChain/LangGraph with SQLite-backed checkpointing for conversation state persistence.
 - Webhook events are automatically cleaned up after `EVENT_EXPIRATION_HOURS` hours.
+- All external API calls include timeout and retry handling to ensure reliability and fast failure recovery.

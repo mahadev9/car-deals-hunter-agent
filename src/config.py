@@ -88,6 +88,32 @@ class Settings(BaseSettings):
         ge=5,
     )
 
+    MCP_SERVER_TIMEOUT: float = Field(
+        default=10.0,
+        description="Timeout in seconds for MCP server connections.",
+        gt=0,
+    )
+    LLM_INVOCATION_TIMEOUT: float = Field(
+        default=300.0,
+        description="Timeout in seconds for LLM API invocations.",
+        gt=0,
+    )
+    LLM_RETRY_MAX_ATTEMPTS: int = Field(
+        default=3,
+        description="Maximum number of retry attempts for LLM API calls.",
+        ge=1,
+    )
+    LLM_RETRY_INITIAL_DELAY: float = Field(
+        default=2.0,
+        description="Initial delay in seconds for exponential backoff on LLM retries.",
+        gt=0,
+    )
+    LLM_RETRY_MAX_DELAY: float = Field(
+        default=10.0,
+        description="Maximum delay in seconds for exponential backoff on LLM retries.",
+        gt=0,
+    )
+
     @model_validator(mode="after")
     def validate_llm_model(self) -> "Settings":
         if self.llm_provider not in ["lmstudio", "openai", "anthropic", "google_genai"]:

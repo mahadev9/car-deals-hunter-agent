@@ -43,7 +43,14 @@ async def handle_message_received(event_payload: WebhookEvent) -> None:
 
     start_time = time.time()
 
-    user_message = "\n".join([part["value"] for part in event_data.get("parts", [])])
+    user_message = ""
+    for part in event_data.get("parts", []):
+        if part.get("type") == "text":
+            user_message += f"{part.get('value')}, "
+        elif part.get("type") == "media" and part.get("mime_type", "").startswith("image/"):
+            user_message += f"image: {part.get('url')}, "
+        elif part.get("type") == "link":
+            user_message += f"link: {part.get('value')}, "
     # process_at, generation = schedule_message_processing(
     #     chat_id=chat_id,
     #     sender=sender,

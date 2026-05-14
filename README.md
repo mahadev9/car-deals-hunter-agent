@@ -2,6 +2,8 @@
 
 An autonomous FastAPI service that receives Linq webhooks, queues incoming messages, and processes them in the background to evaluate car-deal leads.
 
+![Car Deals Hunter Screenshot](./Car%20Deals%20Hunter.png)
+
 https://github.com/mahadev9/car-deals-hunter-agent
 
 ## What It Does
@@ -29,7 +31,11 @@ POLL_INTERVAL_SECONDS=10
 EVENT_EXPIRATION_HOURS=12
 ```
 
-`LLM_MODEL` uses the format `provider:model_name`. Supported providers are `lmstudio`, `openai`, `anthropic`, and `google_genai`. Set the matching API key and, for LM Studio, also set `LM_STUDIO_API_KEY` and `LM_STUDIO_BASE_URL`.
+`LLM_MODEL` uses the format `provider:model_name`. Supported providers are `lmstudio`, `openai`, `anthropic`, and `google_genai`. Set the corresponding API key:
+- `OPENAI_API_KEY` for openai provider
+- `ANTHROPIC_API_KEY` for anthropic provider (also enables web search tool)
+- `GEMINI_API_KEY` for google_genai provider
+- `LM_STUDIO_API_KEY` and `LM_STUDIO_BASE_URL` for lmstudio provider
 
 For local development, `MOUNT_FOLDER` can point at `./data`. In Docker, the compose file mounts `./data` to `/mnt` and sets `MOUNT_FOLDER=/mnt`.
 
@@ -60,7 +66,17 @@ docker compose up --build
 - Health check: `/health`
 - Linq webhook: `/api/linq/webhook`
 
+## MCP Server
+
+The application uses an MCP (Model Context Protocol) server running on `http://localhost:8010/mcp` to provide tool integrations:
+- Web search capabilities (Anthropic)
+- Custom tools for car deal hunting
+
+The MCP server must be running for agent tool invocations to work properly.
+
 ## Notes
 
 - The background worker checks for due jobs every `POLL_INTERVAL_SECONDS` seconds.
 - New messages are held for `MESSAGE_PROCESSING_DELAY_SECONDS` before processing so follow-up messages can be batched into the same chat.
+- The agent uses LangChain/LangGraph with SQLite-backed checkpointing for conversation state persistence.
+- Webhook events are automatically cleaned up after `EVENT_EXPIRATION_HOURS` hours.

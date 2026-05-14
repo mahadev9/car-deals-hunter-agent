@@ -6,8 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: car-deals-hunter-agent
     command: ["python", "src/main.py"]
-    ports:
-      - "8000:8000"
+    network_mode: host
     environment:
       - ENV=prod
       - APP_PORT=8000
@@ -34,8 +33,7 @@ services:
     image: car-deals-hunter-agent:latest
     container_name: car-deals-hunter-agent-mcp
     command: ["python", "src/mcp_server.py"]
-    ports:
-      - "8010:8010"
+    network_mode: host
     environment:
       - ENV=prod
       - MOUNT_FOLDER=/mnt

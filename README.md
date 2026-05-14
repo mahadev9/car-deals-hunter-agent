@@ -2,7 +2,7 @@
 
 An autonomous FastAPI service that receives Linq webhooks, queues incoming messages, and processes them in the background to evaluate car-deal leads.
 
-![Car Deals Hunter Screenshot](./Car%20Deals%20Hunter.png)
+<img src="./Car%20Deals%20Hunter.png" width="400">
 
 https://github.com/mahadev9/car-deals-hunter-agent
 

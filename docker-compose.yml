@@ -24,10 +24,10 @@ services:
           "-c",
           "import httpx; httpx.get('http://localhost:8000/health', timeout=5)",
         ]
-      interval: 30s
+      interval: 120s
       timeout: 10s
       retries: 3
-      start_period: 5s
+      start_period: 10s
 
   car-deals-hunter-mcp:
     image: car-deals-hunter-agent:latest
